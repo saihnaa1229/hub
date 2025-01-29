@@ -9,6 +9,8 @@ definitions:
     type: object
   models.User:
     properties:
+      createdAt:
+        type: string
       id:
         type: string
       name:
@@ -99,6 +101,27 @@ paths:
               $ref: '#/definitions/models.User'
             type: array
       summary: Get Users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.User'
+      summary: Create User
       tags:
       - Users
   /video/{id}:

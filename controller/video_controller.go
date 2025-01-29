@@ -8,11 +8,11 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
-	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/gridfs"
 	"go.mongodb.org/mongo-driver/mongo/options"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var client *mongo.Client
@@ -107,11 +107,13 @@ func GetVideo(w http.ResponseWriter, r *http.Request) {
 	// Stream the video from GridFS
 	downloadStream, err := bucket.OpenDownloadStream(objectID)
 	if err != nil {
-		http.Error(w, fmt.Sprintf("Video not found: %v", err), http.StatusNotFound)
+		// Enhance error logging for clarity
+		http.Error(w, fmt.Sprintf("Video not found or failed to open stream: %v", err), http.StatusNotFound)
 		return
 	}
 	defer downloadStream.Close()
 
+	// Stream the video to the client
 	w.Header().Set("Content-Type", "video/mp4")
 	_, err = io.Copy(w, downloadStream)
 	if err != nil {

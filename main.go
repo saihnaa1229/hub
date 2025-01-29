@@ -31,7 +31,7 @@ func main() {
 	// Add Swagger documentation
 	r.PathPrefix("/swagger/").Handler(httpSwagger.WrapHandler)
 
-	// Start the server
+	// Start the HTTP server
 	log.Println("Server started at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", r))
 }
